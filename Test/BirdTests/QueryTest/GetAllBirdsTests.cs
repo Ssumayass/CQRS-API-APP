@@ -1,14 +1,14 @@
-﻿using Application.Queries.Dogs;
-using Application.Queries.Dogs.GetAll;
+﻿using Application.Queries.Birds;
+using Application.Queries.Birds.GetAll;
 using Domain.Models;
 using Infrastructure.Database;
 
-namespace Test.DogTests.QueryTest
+namespace Test.BirdTests.QueryTest
 {
     [TestFixture]
     public class GetAllBirdsTests
     {
-        private GetAllDogsQueryHandler _handler;
+        private GetAllBirdsQueryHandler _handler;
         private MockDatabase? _mockDatabase;
         private MockDatabase _originalDatabase;
 
@@ -18,21 +18,21 @@ namespace Test.DogTests.QueryTest
             // Initialize the original database and create a clone for each test
             _originalDatabase = new MockDatabase();
             _mockDatabase = _originalDatabase.Clone() as MockDatabase;
-            _handler = new GetAllDogsQueryHandler(_mockDatabase!);
+            _handler = new GetAllBirdsQueryHandler(_mockDatabase!);
         }
 
 
         [Test]
-        public async Task Handle_Valid_ReturnsAllDogs()
+        public async Task Handle_Valid_ReturnsAllBirds()
         {
             // Arrange
-            List<Dog> expectedDogs = _originalDatabase.Dogs;
+            List<Bird> expectedBirds = _originalDatabase.Birds;
 
             // Act
-            List<Dog> result = await _handler.Handle(new GetAllDogsQuery(), CancellationToken.None);
+            List<Bird> result = await _handler.Handle(new GetAllBirdsQuery(), CancellationToken.None);
 
             // Assert
-            CollectionAssert.AreEqual(expectedDogs, result);
+            CollectionAssert.AreEqual(expectedBirds, result);
         }
 
         [Test]
@@ -41,10 +41,10 @@ namespace Test.DogTests.QueryTest
             // Arrange
             // Set up the database to simulate an invalid scenario (e.g., set it to null or throw an exception)
             _mockDatabase = null;
-            _handler = new GetAllDogsQueryHandler(_mockDatabase!);
+            _handler = new GetAllBirdsQueryHandler(_mockDatabase!);
 
             // Act
-            List<Dog> result = await _handler.Handle(new GetAllDogsQuery(), CancellationToken.None);
+            List<Bird> result = await _handler.Handle(new GetAllBirdsQuery(), CancellationToken.None);
 
             // Assert
             Assert.IsNull(result);

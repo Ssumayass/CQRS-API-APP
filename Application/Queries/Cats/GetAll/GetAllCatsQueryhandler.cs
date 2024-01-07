@@ -9,19 +9,24 @@ using System.Threading.Tasks;
 
 namespace Application.Queries.Cats.GetAll
 {
-    public class GetCatByIdQueryHandler : IRequestHandler<GetCatByIdQuery, Cat>
+    public class GetAllCatsQueryHandler : IRequestHandler<GetAllCatsQuery, List<Cat>>
     {
         private readonly MockDatabase _mockDatabase;
 
-        public GetCatByIdQueryHandler(MockDatabase mockDatabase)
+        public GetAllCatsQueryHandler(MockDatabase mockDatabase)
         {
             _mockDatabase = mockDatabase;
         }
 
-        public Task<Cat> Handle(GetCatByIdQuery request, CancellationToken cancellationToken)
+        public Task<List<Cat>> Handle(GetAllCatsQuery request, CancellationToken cancellationToken)
         {
-            Cat wantedCat = _mockDatabase.Cats.FirstOrDefault(Cat => Cat.Id == request.Id)!;
-            return Task.FromResult(wantedCat);
+            if (_mockDatabase == null)
+            {
+                return Task.FromResult<List<Cat>>(null);
+            }
+
+            List<Cat> allCatsFromMockDatabase = _mockDatabase.Cats ?? new List<Cat>();
+            return Task.FromResult(allCatsFromMockDatabase);
         }
     }
 }

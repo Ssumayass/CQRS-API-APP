@@ -8,13 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Queries.Cats.GetAll
 {
-    public class GetCatByIdQuery : IRequest<Cat>
+    public class GetAllCatsQuery : IRequest<List<Cat>>
     {
-        public GetCatByIdQuery(Guid catId)
-        {
-            Id = catId;
-        }
-
-        public Guid Id { get; set; }
     }
 }

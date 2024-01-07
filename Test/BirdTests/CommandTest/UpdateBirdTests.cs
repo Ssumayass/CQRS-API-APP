@@ -1,4 +1,4 @@
-﻿using Application.Commands.Dogs.UpdateDog;
+﻿using Application.Commands.Birds.UpdateBird;
 using Application.Dtos;
 using Infrastructure.Database;
 using System;
@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test.DogTests.CommandTest
+namespace Test.BirdTests.CommandTest
 {
     [TestFixture]
     public class UpdateBirdTests
     {
-        private UpdateDogByIdCommandHandler _handler;
+        private UpdateBirdByIdCommandHandler _handler;
         private MockDatabase _mockDatabase;
         private MockDatabase _originalDatabase;
 
@@ -22,38 +22,38 @@ namespace Test.DogTests.CommandTest
             // Initialize the original database and create a clone for each test
             _originalDatabase = new MockDatabase();
             _mockDatabase = _originalDatabase.Clone() as MockDatabase;
-            _handler = new UpdateDogByIdCommandHandler(_originalDatabase);
+            _handler = new UpdateBirdByIdCommandHandler(_originalDatabase);
         }
 
         [Test]
-        public async Task Handle_ValidId_UpdatesDog()
+        public async Task Handle_ValidId_UpdatesBird()
         {
             // Arrange
-            var dogId = new Guid("12345678-1234-5678-1234-567812345678");
-            var updatedName = new DogDto { Name = "NewDogName", LikesToPlay = false };
+            var birdId = new Guid("12345678-1234-5678-1234-567812345678");
+            var updatedName = new BirdDto { Name = "NewBirdName", LikesToPlay = false };
 
-            var command = new UpdateDogByIdCommand(updatedName, dogId);
+            var command = new UpdateBirdByIdCommand(updatedName, birdId);
 
             //Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.NotNull(result);
-            Assert.That(result.Name, Is.EqualTo("NewDogName"));
+            Assert.That(result.Name, Is.EqualTo("NewBirdName"));
         }
 
         [Test]
         public async Task Handle_InvalidId_DoesNothing()
         {
             // Arrange
-            var invalidDogId = Guid.NewGuid();
-            var invalidDogName = new DogDto { Name = "Name" };
+            var invalidBirdId = Guid.NewGuid();
+            var invalidBirdName = new BirdDto { Name = "Name" };
 
-            // Mock the database to simulate that no dog with the specified ID is found
+            // Mock the database to simulate that no bird with the specified ID is found
             var mockDatabase = new MockDatabase();
-            var handler = new UpdateDogByIdCommandHandler(mockDatabase);
+            var handler = new UpdateBirdByIdCommandHandler(mockDatabase);
 
-            var command = new UpdateDogByIdCommand(invalidDogName, invalidDogId);
+            var command = new UpdateBirdByIdCommand(invalidBirdName, invalidBirdId);
 
             // Act
             var result = await handler.Handle(command, CancellationToken.None);

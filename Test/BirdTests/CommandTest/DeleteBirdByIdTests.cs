@@ -1,13 +1,12 @@
-﻿using Application.Commands.Dogs;
-using Application.Dtos;
+﻿using Application.Commands.Birds.DeleteBird;
 using Infrastructure.Database;
 
-namespace Test.DogTests.CommandTest
+namespace Test.BirdTests.CommandTest
 {
     [TestFixture]
-    public class AddBirdTests
+    public class DeleteBirdByIdTest
     {
-        private AddDogCommandHandler _handler;
+        private DeleteBirdByIdCommandHandler _handler;
         private MockDatabase _mockDatabase;
         private MockDatabase _originalDatabase;
 
@@ -17,30 +16,32 @@ namespace Test.DogTests.CommandTest
             // Initialize the original database and create a clone for each test
             _originalDatabase = new MockDatabase();
             _mockDatabase = _originalDatabase.Clone() as MockDatabase;
-            _handler = new AddDogCommandHandler(_originalDatabase);
+            _handler = new DeleteBirdByIdCommandHandler(_originalDatabase);
         }
 
         [Test]
-        public async Task Handle_ValidCommand_AddNewDog()
+        public async Task Handle_ValidId_DeletesBird()
         {
             // Arrange
-            var command = new AddDogCommand(new DogDto { Name = "NewDog" });
+            var dogId = new Guid("12345678-1234-5678-1234-567812345670");
+
+            var command = new DeleteBirdByIdCommand(dogId);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            var newDogInDatabase = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Name == "NewDog");
-
-            Assert.IsNotNull(newDogInDatabase);
-            Assert.That(newDogInDatabase.Name, Is.EqualTo("NewDog"));
+            Assert.NotNull(result);
+            Assert.That(result.Id, Is.EqualTo(dogId));
         }
 
         [Test]
-        public async Task Handle_InValidCommand_EmptyDogName()
+        public async Task Handle_InvalidId_DoesNothing()
         {
             // Arrange
-            var command = new AddDogCommand(new DogDto { Name = "" });
+            var invalidBirdId = Guid.NewGuid();
+
+            var command = new DeleteBirdByIdCommand(invalidBirdId);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
@@ -48,8 +49,5 @@ namespace Test.DogTests.CommandTest
             // Assert
             Assert.IsNull(result);
         }
-
-
-
     }
 }

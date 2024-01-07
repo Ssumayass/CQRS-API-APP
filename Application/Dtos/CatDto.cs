@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos
 {
-    public class DogDto
+    public class CatDto
     {
         public string Name { get; set; } = string.Empty;
         public bool LikesToPlay { get; set; }
+
     }
 }

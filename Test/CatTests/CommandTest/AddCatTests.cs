@@ -1,14 +1,14 @@
-﻿using Application.Commands.Birds;
-using Application.Commands.Birds.AddBird;
+﻿using Application.Commands.Cats;
+using Application.Commands.Cats.AddCat;
 using Application.Dtos;
 using Infrastructure.Database;
 
-namespace Test.BirdTests.CommandTest
+namespace Test.CatTests.CommandTest
 {
     [TestFixture]
     public class AddCatTests
     {
-        private AddBirdCommandHandler _handler;
+        private AddCatCommandHandler _handler;
         private MockDatabase _mockDatabase;
         private MockDatabase _originalDatabase;
 
@@ -18,30 +18,30 @@ namespace Test.BirdTests.CommandTest
             // Initialize the original database and create a clone for each test
             _originalDatabase = new MockDatabase();
             _mockDatabase = _originalDatabase.Clone() as MockDatabase;
-            _handler = new AddBirdCommandHandler(_originalDatabase);
+            _handler = new AddCatCommandHandler(_originalDatabase);
         }
 
         [Test]
-        public async Task Handle_ValidCommand_AddNewBird()
+        public async Task Handle_ValidCommand_AddNewCat()
         {
             // Arrange
-            var command = new AddBirdCommand(new BirdDto { Name = "NewBird" });
+            var command = new AddCatCommand(new CatDto { Name = "NewCat" });
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            var newBirdInDatabase = _mockDatabase.Birds.FirstOrDefault(bird => bird.Name == "NewBird");
+            var newCatInDatabase = _mockDatabase.Cats.FirstOrDefault(cat => cat.Name == "NewCat");
 
-            Assert.IsNotNull(newBirdInDatabase);
-            Assert.That(newBirdInDatabase.Name, Is.EqualTo("NewBird"));
+            Assert.IsNotNull(newCatInDatabase);
+            Assert.That(newCatInDatabase.Name, Is.EqualTo("NewCat"));
         }
 
         [Test]
-        public async Task Handle_InValidCommand_EmptyBirdName()
+        public async Task Handle_InValidCommand_EmptyCatName()
         {
             // Arrange
-            var command = new AddBirdCommand(new BirdDto { Name = "" });
+            var command = new AddCatCommand(new CatDto { Name = "" });
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
